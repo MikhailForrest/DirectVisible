@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Azimut</title>
+    {{map.header.render|safe}}
+  </head>
+  <body>
+    {{map.html.render|safe}}
+    <script>
+      {{map.script.render|safe}}
+    </script> 
+  </body>
+{{ map|safe }}   <!--Без этого карта не отображается-->
+<div style="position: fixed;  
+    top: 10px; left: 10px; height: 359px; min-width: 185px; 
+    background-color:rgb(204, 233, 244); border:1px solid rgb(111, 151, 106);z-index: 900;border-radius:5px;">
+    <div style="position: fixed; padding-left: 10px; border-radius:5px; cursor: default;">
+      <form method="POST">
+        {% csrf_token %}
+        <table>
+            {{ form.as_table }}
+        </table>
+        <div>
+          <button style="font-size: 20px; 
+          border-radius:5px;
+          border-color: #0b3280;
+          padding:10px;
+          min-height:20px; 
+          min-width: 165px;
+          background: #7396dc;
+          cursor: pointer;
+          left: 0;
+          color: #0b3280;" 
+          type="submit" class="btn btn-success" name="Direct Visibility">Calculate</button>   
+        </div>
+        <div>
+          <button 
+              style="font-size: 14px; 
+              margin-top:4px;
+              border-radius:5px;
+              border-color: #0b3280;
+              padding:10px;
+              min-height:10px; 
+              min-width: 165px;
+              background: #7396dc18;
+              cursor: pointer;
+              left: 0;
+              color: #0b3280;" 
+              type="submit" class="btn btn-success" name="DrawUserObjects">Draw UserObject
+          </button>
+        </div>
+      </form>
+      <div>
+          <button 
+              style="font-size: 14px; 
+              margin-top:4px;
+              border-radius:5px;
+              border-color: #0b3280;
+              padding:10px;
+              min-height:10px; 
+              min-width: 165px;
+              background: #7396dc18;
+              cursor: pointer;
+              left: 0;
+              color: #0b3280;" 
+              onclick="location.href = '/azimuth/zones'">Go to work with DB    
+          </button>
+      </div>      
+    </div>        
+</div>
+
+  
+
+
+  
+</html>

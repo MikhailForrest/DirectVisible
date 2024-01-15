@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Azimut</title>
+    {{zones.header.render|safe}}
+  </head>
+  <body>
+    {{zones.html.render|safe}}
+    <script>
+      {{zones.script.render|safe}}
+    </script> 
+  </body>
+{{ zones|safe }}   <!--Без этого карта не отображается-->
+<table >
+    <div style="position: fixed; padding-left: 10px; border-radius:5px; cursor: default;">
+      <form method="POST">
+        {% csrf_token %}
+        <table style="position: fixed; top: 10px; left: 10px; height: 60px; min-width: 165px; 
+            background-color:rgb(204, 233, 244); border:1px solid rgb(111, 151, 106);z-index: 900;border-radius:5px;">
+            {{ form.as_table }}
+            <div style="position: fixed; top: 190px; left: 10px;">
+                <button style=" font-size: 20px; 
+                    border-radius:5px;
+                    border-color: #0b3280;
+                    padding:10px;
+                    min-height:20px; 
+                    min-width: 100px;
+                    background: #7396dc;
+                    cursor: pointer;
+                    color: #0b3280;" 
+                    type="submit" class="btn btn-success" name="LoadZones">Load
+                </button>   
+            </div>
+            <div style="position: fixed; top: 245px; left: 10px;">
+                <button style=" font-size: 20px; 
+                    border-radius:5px;
+                    border-color: #0b3280;
+                    padding:10px;
+                    min-height:20px; 
+                    min-width: 100px;
+                    background: #7396dc;
+                    cursor: pointer;
+                    color: #0b3280;" 
+                    type="submit" class="btn btn-success" name="LoadPosition">Find
+                </button>   
+            </div>
+            <div style="position: fixed; top: 300px; left: 10px;">
+                <button style=" font-size: 20px; 
+                    border-radius:5px;
+                    border-color: #0b3280;
+                    padding:10px;
+                    min-height:20px; 
+                    min-width: 100px;
+                    background: #7396dc;
+                    cursor: pointer;
+                    color: #0b3280;" 
+                    type="submit" class="btn btn-success" name="Load Aeroflot Tracks">Load Aeroflot Tracks
+                </button>   
+            </div>
+            <div style="position: fixed; top: 355px; left: 10px;">
+              <button style=" font-size: 20px; 
+                  border-radius:5px;
+                  border-color: #0b3280;
+                  padding:10px;
+                  min-height:20px; 
+                  min-width: 100px;
+                  background: #7396dc;
+                  cursor: pointer;
+                  color: #0b3280;" 
+                  type="submit" class="btn btn-success" name="LoadKML">Load KML
+              </button>   
+            </div>
+            <div style="position: fixed; top: 410px; left: 10px;">
+              <button style=" font-size: 20px; 
+                  border-radius:5px;
+                  border-color: #0b3280;
+                  padding:10px;
+                  min-height:20px; 
+                  min-width: 100px;
+                  background: #7396dc;
+                  cursor: pointer;
+                  color: #0b3280;" 
+                  type="submit" class="btn btn-success" name="ViewDataHeight">View Height Data
+              </button>   
+            </div>
+        </table>  
+      </form>
+      <div style = "position: fixed; margin-top: 150; top: 465px; left: 10px; height: 60px; min-width: 165px; 
+          z-index: 900;border-radius:5px;">
+          <button 
+              style="
+              font-size: 14px; 
+              border-radius:5px;
+              margin-top: 100;
+              border-color: #0b3280;
+              padding:10px;
+              min-height:10px; 
+              min-width: 165px;
+              background: #7396dc18;
+              cursor: pointer;
+              left: 0;
+              color: #0b3280;" 
+              onclick="location.href = '/azimuth/map'">Go to calculate    
+          </button>
+      </div>
+
+    </div>   
+       
+  </table><!---->
+  <p>
+    {{ airport}}{{'   '}}{{num_buildings}}{{'   '}}{{step_}}
+</html>
