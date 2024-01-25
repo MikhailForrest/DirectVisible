@@ -168,7 +168,7 @@ def map_button(request):
                                                            PointToPointVisible.heightFromLatLon(lat_f,lon+dlon_f))<\
                                                             form.cleaned_data['limitUpperAngle']) and \
                             (topocentric.getElevationInDeg(lat_f, lon+dlon_f, heightOfAircraft+\
-                                                           PointToPointVisible.heightFromLatLon(lat_f,lon+dlon_f))<\
+                                                           PointToPointVisible.heightFromLatLon(lat_f,lon+dlon_f))>\
                                                             form.cleaned_data['limitLowerAngle']):
                             if not isOpenedInterval:
                                 helpVar = dist_in_km
@@ -711,7 +711,7 @@ def zones(request):
                 #         folium.Polygon(funcForSegment(zone.latOfCenter,zone.longOfCenter,float(intervals), zone.stepOfAzimuth, \
                 #                                     inList[0], inList[1], 10),weight = 1,\
                 #                                         opacity = 0.3, color = 'orange',\
-                #                                             fill =True, fill_opacity = 0.6, fill_color = 'orange').add_to(map)
+                #                                             fill =True, fill_opacity = 0.6, fill_color = 'orange').add_to(map1)
                 #конец блока под удаление        
             
                 zone1 = createZoneFromElementOfDBWithLimits(reData, zone.latOfCenter, zone.longOfCenter, zone.stepOfAzimuth, \
