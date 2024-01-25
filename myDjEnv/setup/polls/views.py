@@ -888,13 +888,16 @@ def heights(request): # where is image results for all values of heights for pos
             for  zone in ZoneForDB.objects.filter(name__contains = help_str ):
                 if zone.position ==caption:
                     reData = json.loads(zone.intervals)   
+                    hOfAirCraft = 0 # сюда определение
                     zone1 = createZoneFromElementOfDBWithLimits(reData, zone.latOfCenter, zone.longOfCenter, zone.stepOfAzimuth, \
                                                             500)
+                    
                     zones.append(zone1)
 
-            for zone1 in zones:
+            for i in range(0,len(zones)):
                 try:
-                    folium.Polygon((zone1), color = 'green',  opacity = 0.8, weight = 1.0,  fill =True, fill_opacity = 0.2,\
+                    #ring = [zones[i],zones[i+1]]
+                    folium.Polygon((zones[i]), color = 'green',  opacity = 0.8, weight = 1.0,  fill =True, fill_opacity = 0.2,\
                                 fill_color = 'green').add_to(map)    
                 except ValueError: # добавил обработку исключения, поскольку при нулевых значениях выпадала ошибка
                     pass
