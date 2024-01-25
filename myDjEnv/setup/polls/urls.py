@@ -11,6 +11,6 @@ urlpatterns = [
     path('zones', views.zones, name='zones'),
     path('fortraces', views.fortraces, name = 'fortraces'),
     path('firehose', views.firehose, name = 'firehose'),
-    
+    path('heights',views.heights, name = 'heights')
 
 ]

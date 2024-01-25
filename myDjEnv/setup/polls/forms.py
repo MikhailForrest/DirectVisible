@@ -50,3 +50,7 @@ class forZones(forms.Form):
     
 class forEnterHeight(forms.Form):
     height = forms.IntegerField(label='height Of Aircraft:', initial=20, min_value=0, max_value=1000)
+
+class forHeigths(forms.Form):
+    position = forms.CharField(label = 'Name of location', max_length=200, initial= 'Balakovo')
+    AboveGroundLevel = forms.BooleanField(label='Above Ground Level:', widget=forms.CheckboxInput(),required=False)

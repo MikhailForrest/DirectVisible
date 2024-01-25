@@ -11,6 +11,7 @@ from folium.plugins import MousePosition
 from .forms import forZones
 from .forms import DirVis
 from .forms import forEnterHeight
+from .forms import forHeigths
 from django.core.exceptions import MultipleObjectsReturned
 
 from .models import Choice, Question
@@ -310,8 +311,6 @@ def map_button(request):
     map = map._repr_html_()
     contex = {'form':form, 'map': map}    
     return render(request,'polls/map.html', contex)
-
-
 
 def zones(request):
     map1 = folium.Map(
@@ -860,6 +859,32 @@ def zones(request):
     map1 = map1._repr_html_()
     contex = {'form': form, 'zones': map1}    
     return render(request,'polls/zones.html', contex)
+
+def heights(request): # where is image results for all values of heights for position ()
+    map = folium.Map(
+            location = [54, 41],
+            zoom_start = 9, control_scale=True, prefer_canvas = True, zoom_control = False,
+            tiles = 'OpenStreetMap')
+    #вывод координат курсора
+    formatter = "function(num) {return L.Util.formatNum(num, 7) + ' &deg; ';};"
+    MousePosition(position="topright",\
+                  separator=" ; ",
+                  empty_string="NaN",
+                  lng_first=False,
+                  num_digits=20,
+                  prefix="Coordinates:",
+                  lat_formatter=formatter,
+                  lng_formatter=formatter,).add_to(map)
+    if  (request.method == "POST") and ('Load Zones' in request.POST): #загрузка высот зданий для аэропорта   
+        form = forHeigths(request.POST)
+        if form.is_valid() :
+            pass
+    else:
+        form = forHeigths()
+
+    map = map._repr_html_()
+    contex = {'form': form,'heights': map}
+    return render(request,'polls/heights.html', contex)
 
 # нужен только на период создания БД по трассам
 def fortraces(request):

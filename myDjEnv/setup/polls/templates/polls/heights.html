@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Azimut</title>
+    {{heights.header.render|safe}}
+  </head>
+  <body>
+    {{heights.html.render|safe}}
+    <script>
+      {{heights.script.render|safe}}
+    </script> 
+  </body>
+ {{ heights|safe }} 
+ <div style="position: fixed;  
+ top: 10px; left: 10px">
+ <div style="position: fixed; padding-left: 10px; border-radius:5px; cursor: default;">
+   <form method="POST">
+     {% csrf_token %}
+     <table>
+         {{ form.as_table }}
+     </table>
+     <div>
+       <button style="font-size: 20px; 
+       border-radius:5px;
+       border-color: #0b3280;
+       padding:10px;
+       min-height:20px; 
+       min-width: 165px;
+       background: #7396dc;
+       cursor: pointer;
+       left: 0;
+       color: #0b3280;" 
+       type="submit" class="btn btn-success" name="Zones">Zones</button>   
+     </div>
+     
+   </form>
+   <div>
+       <button 
+           style="font-size: 14px; 
+           margin-top:4px;
+           border-radius:5px;
+           border-color: #0b3280;
+           padding:10px;
+           min-height:10px; 
+           min-width: 165px;
+           background: #7396dc18;
+           cursor: pointer;
+           left: 0;
+           color: #0b3280;" 
+           onclick="location.href = '/azimuth/zones'">Go to work with DB    
+       </button>
+   </div>      
+ </div>        
+</div>
+
+
+  
+</html>
