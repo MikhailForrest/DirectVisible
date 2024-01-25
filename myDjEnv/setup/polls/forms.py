@@ -54,3 +54,4 @@ class forEnterHeight(forms.Form):
 class forHeigths(forms.Form):
     position = forms.CharField(label = 'Name of location', max_length=200, initial= 'Balakovo')
     AboveGroundLevel = forms.BooleanField(label='Above Ground Level:', widget=forms.CheckboxInput(),required=False)
+    DrawTracks = forms.BooleanField(label='Draw Tracks:', widget=forms.CheckboxInput(),required=False)

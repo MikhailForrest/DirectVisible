@@ -875,10 +875,74 @@ def heights(request): # where is image results for all values of heights for pos
                   prefix="Coordinates:",
                   lat_formatter=formatter,
                   lng_formatter=formatter,).add_to(map)
-    if  (request.method == "POST") and ('Load Zones' in request.POST): #загрузка высот зданий для аэропорта   
+    
+    if  (request.method == "POST") and ('Zones' in request.POST): #загрузка высот зданий для аэропорта   
         form = forHeigths(request.POST)
         if form.is_valid() :
-            pass
+            caption = form.cleaned_data['position']
+            if form.cleaned_data['AboveGroundLevel']:
+                help_str = 'AGL'
+            else:
+                help_str = 'AMSL'
+            zones = []
+            for  zone in ZoneForDB.objects.filter(name__contains = help_str ):
+                if zone.position ==caption:
+                    reData = json.loads(zone.intervals)   
+                    zone1 = createZoneFromElementOfDBWithLimits(reData, zone.latOfCenter, zone.longOfCenter, zone.stepOfAzimuth, \
+                                                            500)
+                    zones.append(zone1)
+
+            for zone1 in zones:
+                try:
+                    folium.Polygon((zone1), color = 'green',  opacity = 0.0, weight = 0,  fill =True, fill_opacity = 0.2,\
+                                fill_color = 'green').add_to(map)    
+                except ValueError: # добавил обработку исключения, поскольку при нулевых значениях выпадала ошибка
+                    pass
+
+
+            radiusesInM = []
+            for i in range(1,math.trunc(300/50)+2):
+                radiusesInM.append(i*50000)
+            for radiusU in radiusesInM:
+                folium.Circle(location=[zone.latOfCenter,zone.longOfCenter],
+                    radius=radiusU,
+                    color='black',
+                    weight=1,
+                    fill=False
+                    ).add_to(map)
+                dist = math.trunc(radiusU/1000)
+                for az in (0,90,180,270):
+                    (lat_,dlon_,alfa2_) = GeoFunctions.Direct_Geodezian_Task(zone.latOfCenter, az, 1000*dist)
+                    folium.Marker(location=[lat_,zone.longOfCenter+dlon_],
+                                icon=folium.DivIcon(html=f'''<!DOCTYPE html><html><div style="font-size: 8pt"><p>{str(dist)+'km'}</p></div></html>''',
+                                class_name="mapText")).add_to(map)
+            if  form.cleaned_data['DrawTracks']:
+                for track in TraceAN.objects.all():
+                    pods = json.loads(track.pods)
+                    lat_pre = 0
+                    lon_pre = 0
+                    for item in pods.keys():
+                        if bool(pods[item][2]):
+                            icon1 = folium.CustomIcon('polls/pnd.ico',icon_size=(10, 10))
+                        else:
+                            icon1 = folium.CustomIcon('polls/pod.ico',icon_size=(10, 10))
+                        folium.Marker(location=[pods[item][0], pods[item][1]], icon= icon1,).add_to(map)
+                        folium.Marker(location=[pods[item][0]-0.0025*5,pods[item][1]+0.0083*5],\
+                                      icon=folium.DivIcon(html=\
+                                                          f'''<!DOCTYPE html><html><div style="font-size: 8pt"><p>{item}</p></div></html>''',
+                                            class_name="mapText"),
+                        ).add_to(map)
+                        if lat_pre!=0 and lon_pre!=0:
+                            folium.PolyLine([(lat_pre,lon_pre),(pods[item][0], pods[item][1])],\
+                                            color='gray',weight=1).add_to(map)
+                            folium.Marker(location=[(pods[item][0]+lat_pre)/2,(pods[item][1]+lon_pre)/2],
+                                        icon=folium.DivIcon(html=f'''<!DOCTYPE html><html><div style="font-size: 8pt"><p>{track.name}</p></div></html>''',
+                                        class_name="mapText")).add_to(map)
+                            lat_pre = pods[item][0]
+                            lon_pre = pods[item][1]
+                        else:
+                            lat_pre = pods[item][0]
+                            lon_pre = pods[item][1] 
     else:
         form = forHeigths()
 
