@@ -894,7 +894,7 @@ def heights(request): # where is image results for all values of heights for pos
 
             for zone1 in zones:
                 try:
-                    folium.Polygon((zone1), color = 'green',  opacity = 0.0, weight = 0,  fill =True, fill_opacity = 0.2,\
+                    folium.Polygon((zone1), color = 'green',  opacity = 0.8, weight = 1.0,  fill =True, fill_opacity = 0.2,\
                                 fill_color = 'green').add_to(map)    
                 except ValueError: # добавил обработку исключения, поскольку при нулевых значениях выпадала ошибка
                     pass
@@ -908,12 +908,13 @@ def heights(request): # where is image results for all values of heights for pos
                     radius=radiusU,
                     color='black',
                     weight=1,
-                    fill=False
+                    fill=False,
+                    opacity = 0.5
                     ).add_to(map)
                 dist = math.trunc(radiusU/1000)
                 for az in (0,90,180,270):
                     (lat_,dlon_,alfa2_) = GeoFunctions.Direct_Geodezian_Task(zone.latOfCenter, az, 1000*dist)
-                    folium.Marker(location=[lat_,zone.longOfCenter+dlon_],
+                    folium.Marker(location=[lat_,zone.longOfCenter+dlon_], opacity = 0.6,
                                 icon=folium.DivIcon(html=f'''<!DOCTYPE html><html><div style="font-size: 8pt"><p>{str(dist)+'km'}</p></div></html>''',
                                 class_name="mapText")).add_to(map)
             if  form.cleaned_data['DrawTracks']:
