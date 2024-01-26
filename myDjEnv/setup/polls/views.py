@@ -882,8 +882,12 @@ def heights(request): # where is image results for all values of heights for pos
             caption = form.cleaned_data['position']
             if form.cleaned_data['AboveGroundLevel']:
                 help_str = 'AGL'
+                maxD = 150
+                delD = 25
             else:
                 help_str = 'AMSL'
+                maxD = 300
+                delD = 50
             zones = []
             for  zone in ZoneForDB.objects.filter(name__contains = help_str ):
                 if zone.position ==caption:
@@ -891,21 +895,47 @@ def heights(request): # where is image results for all values of heights for pos
                     hOfAirCraft = 0 # сюда определение
                     zone1 = createZoneFromElementOfDBWithLimits(reData, zone.latOfCenter, zone.longOfCenter, zone.stepOfAzimuth, \
                                                             500)
-                    
                     zones.append(zone1)
+            map.location = [zone.latOfCenter,zone.longOfCenter]
+            if len(zones)>0:
+                count = 0
+                for i in range(0,len(zones)):
+                    try:
+                        #ring = [zones[i],zones[i+1]]
+                        if count<1:
+                            col = 'red'
+                        elif count <2:
+                            col = 'blue'
+                        elif count <3:
+                            col = 'yellow'
+                        elif count <4:
+                            col = 'navy'
+                        elif count <5:
+                            col = 'lime'
+                        elif count <6:
+                            col = 'orange' 
+                        elif count <7:
+                            col = 'rose'   
+                        elif count <8:
+                            col = 'purple'     
+                        else: 
+                            col = 'green'
+                        folium.Polygon((zones[i]), color = col,  opacity = 1, weight = 1.0,  fill =True, fill_opacity = 0.2,\
+                                    fill_color = col).add_to(map)
+                        count +=1    
+                    except ValueError: # добавил обработку исключения, поскольку при нулевых значениях выпадала ошибка
+                        pass
 
-            for i in range(0,len(zones)):
-                try:
-                    #ring = [zones[i],zones[i+1]]
-                    folium.Polygon((zones[i]), color = 'green',  opacity = 0.8, weight = 1.0,  fill =True, fill_opacity = 0.2,\
-                                fill_color = 'green').add_to(map)    
-                except ValueError: # добавил обработку исключения, поскольку при нулевых значениях выпадала ошибка
-                    pass
-
+                # image position of center
+                folium.CircleMarker(location = [zone.latOfCenter,zone.longOfCenter], color = 'navy', opacity = 0.6, radius = 2).\
+                    add_to(map)
+                folium.Marker(location=[zone.latOfCenter-0.01,zone.longOfCenter+0.01], opacity = 0.6,
+                                icon=folium.DivIcon(html=f'''<!DOCTYPE html><html><div style="font-size: 8pt"><p>{zone.position}</p></div></html>''',
+                                class_name="mapText")).add_to(map)
 
             radiusesInM = []
-            for i in range(1,math.trunc(300/50)+2):
-                radiusesInM.append(i*50000)
+            for i in range(1,math.trunc(maxD/delD)+2):
+                radiusesInM.append(i*delD*1000)
             for radiusU in radiusesInM:
                 folium.Circle(location=[zone.latOfCenter,zone.longOfCenter],
                     radius=radiusU,
@@ -920,6 +950,9 @@ def heights(request): # where is image results for all values of heights for pos
                     folium.Marker(location=[lat_,zone.longOfCenter+dlon_], opacity = 0.6,
                                 icon=folium.DivIcon(html=f'''<!DOCTYPE html><html><div style="font-size: 8pt"><p>{str(dist)+'km'}</p></div></html>''',
                                 class_name="mapText")).add_to(map)
+
+            
+
             if  form.cleaned_data['DrawTracks']:
                 for track in TraceAN.objects.all():
                     pods = json.loads(track.pods)
