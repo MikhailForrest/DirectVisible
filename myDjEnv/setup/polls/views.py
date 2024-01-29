@@ -949,9 +949,7 @@ def heights(request): # where is image results for all values of heights for pos
                     (lat_,dlon_,alfa2_) = GeoFunctions.Direct_Geodezian_Task(zone.latOfCenter, az, 1000*dist)
                     folium.Marker(location=[lat_,zone.longOfCenter+dlon_], opacity = 0.6,
                                 icon=folium.DivIcon(html=f'''<!DOCTYPE html><html><div style="font-size: 8pt"><p>{str(dist)+'km'}</p></div></html>''',
-                                class_name="mapText")).add_to(map)
-
-            
+                                class_name="mapText")).add_to(map)  
 
             if  form.cleaned_data['DrawTracks']:
                 for track in TraceAN.objects.all():
