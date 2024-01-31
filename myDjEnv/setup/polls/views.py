@@ -888,18 +888,33 @@ def heights(request): # where is image results for all values of heights for pos
                 help_str = 'AMSL'
                 maxD = 300
                 delD = 50
-            zones = []
+            zones = {}
             for  zone in ZoneForDB.objects.filter(name__contains = help_str ):
                 if zone.position ==caption:
-                    reData = json.loads(zone.intervals)   
-                    hOfAirCraft = 0 # сюда определение
+                    reData = json.loads(zone.intervals) 
                     zone1 = createZoneFromElementOfDBWithLimits(reData, zone.latOfCenter, zone.longOfCenter, zone.stepOfAzimuth, \
                                                             500)
-                    zones.append(zone1)
+                    
+                    zones[int(zone.name[zone.name.index('hAircraft=')+10:zone.name.index('.0A')])] = zone1
+                    #пытаюсь настроить кольца
+                    # if i_z>0:
+                    #     if int(zone.name[zone.name.index('hAircraft=')+10:zone.name.index('.0A')])>i_z:
+                    #         zone_outter = zone1
+                    #     else:
+                    #         zone_outter = zone_inner
+                    #         zone_inner = zone1
+                    # if i_z == 0:
+                    #     zone_inner = zone1
+                    #     try:
+                    #         strH = zone.name[zone.name.index('hAircraft=')+10:zone.name.index('.0A')]
+                    #         i_z = int(strH)
+                    #     except ValueError:
+                    #         i_z = 0
+                    # конец блока настройки поиска колец
             map.location = [zone.latOfCenter,zone.longOfCenter]
             if len(zones)>0:
                 count = 0
-                for i in range(0,len(zones)):
+                for item in zones.values():
                     try:
                         #ring = [zones[i],zones[i+1]]
                         if count<1:
@@ -920,12 +935,15 @@ def heights(request): # where is image results for all values of heights for pos
                             col = 'purple'     
                         else: 
                             col = 'green'
-                        folium.Polygon((zones[i]), color = col,  opacity = 1, weight = 1.0,  fill =True, fill_opacity = 0.2,\
+                        folium.Polygon(item, color = col,  opacity = 1, weight = 1.0,  fill =True, fill_opacity = 0.2,\
                                     fill_color = col).add_to(map)
                         count +=1    
                     except ValueError: # добавил обработку исключения, поскольку при нулевых значениях выпадала ошибка
                         pass
-
+                # zone_outter[1].append(zone_inner[0])
+                # folium.Polygon(zone_outter, color = col,  opacity = 1, weight = 1.0,  fill =True, fill_opacity = 0.2,\
+                #                fill_color = col).add_to(map)       
+                
                 # image position of center
                 folium.CircleMarker(location = [zone.latOfCenter,zone.longOfCenter], color = 'navy', opacity = 0.6, radius = 2).\
                     add_to(map)
