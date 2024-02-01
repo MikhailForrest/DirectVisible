@@ -916,27 +916,8 @@ def heights(request): # where is image results for all values of heights for pos
                 count = 0
                 for item in zones.values():
                     try:
-                        #ring = [zones[i],zones[i+1]]
-                        if count<1:
-                            col = 'red'
-                        elif count <2:
-                            col = 'blue'
-                        elif count <3:
-                            col = 'yellow'
-                        elif count <4:
-                            col = 'navy'
-                        elif count <5:
-                            col = 'lime'
-                        elif count <6:
-                            col = 'orange' 
-                        elif count <7:
-                            col = 'rose'   
-                        elif count <8:
-                            col = 'purple'     
-                        else: 
-                            col = 'green'
-                        # folium.Polygon(item, color = col,  opacity = 1, weight = 1.0,  fill =True, fill_opacity = 0.2,\
-                        #             fill_color = col).add_to(map)
+                        # folium.Polygon(item, color = myFunc.intToColor(count),  opacity = 1, weight = 1.0,  fill =True, fill_opacity = 0.2,\
+                        #             fill_color = myFunc.intToColor(count)).add_to(map)
                         count +=1    
                     except ValueError: # добавил обработку исключения, поскольку при нулевых значениях выпадала ошибка
                         pass
@@ -944,13 +925,13 @@ def heights(request): # where is image results for all values of heights for pos
                 for i in range(0,len(zones_S)):
                     if i == 0:
                         col = 'red'
-                        folium.Polygon(zones_S[i][1], color = col,  opacity = 1, weight = 1.0,  fill =True, fill_opacity = 0.2,\
+                        folium.Polygon(zones_S[i][1], color = col,  opacity = 1, weight = 1.0,  fill =True, fill_opacity = 0.4,\
                                 fill_color = col).add_to(map) 
                     else:
                         zone_h = zones_S[i][1]
                         zone_h[1].append(zones_S[i-1][1][0]) # эта строка изменяет 
-                        col = 'blue'
-                        folium.Polygon(zone_h, color = col,  opacity = 1, weight = 1.0,  fill =True, fill_opacity = 0.2,\
+                        col = myFunc.intToColor(i)
+                        folium.Polygon(zone_h, color = col,  opacity = 1, weight = 1.0,  fill =True, fill_opacity = 0.4,\
                                 fill_color = col).add_to(map) 
                         # folium.Polygon(zones_S[i-1][1][1], color = col,  opacity = 1, weight = 1.0,  fill =True, fill_opacity = 0.2,\
                         #         fill_color = col).add_to(map)

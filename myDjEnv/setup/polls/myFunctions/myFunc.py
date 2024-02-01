@@ -174,4 +174,11 @@ def intersect_rectangles (latmin_f,latmax_f,lonmin_f,lonmax_f,\
         return True
     else:
         return False
+    
+# Функция для перевода шага итерации в отличный от предыдущего цвет
+def intToColor (i: int):
+    innerDict = {0: 'red', 1: 'coral', 2: 'yellow', 3: 'springgreen', 4: 'green', 5: 'lightseagreen',\
+                 6: 'dodgerblue', 7: 'mediumblue', 8: 'indigo', 9: 'magenta', 10: 'violet', 11: 'crimson', \
+                 12: 'olive', 13: 'navy', 14: 'fucsia', 15: 'chocolate'}
+    return innerDict[i%16]
 
