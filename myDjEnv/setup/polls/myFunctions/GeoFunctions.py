@@ -24,7 +24,7 @@ def DistanceInDecart(X1,Y1,Z1,X2,Y2,Z2):
    return math.sqrt(math.pow((X1-X2),2)+math.pow((Y1-Y2),2)+math.pow((Z1-Z2),2)) #выдает в той же размерности, в какой координаты
 
 # Функция вычисления расстояния по сферическим координатам двух точек
-def DistanceInLatLonHeight(lat1,lon1,h1,lat2,lon2,h2):
+def DistanceInLatLonHeight(lat1,lon1,h1,lat2,lon2,h2): # в метрах
    x1 = X_space(lat1,lon1,h1) 
    y1 = Y_space(lat1,lon1,h1)
    z1 = Z_space(lat1,h1)

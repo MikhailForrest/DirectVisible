@@ -889,57 +889,43 @@ def heights(request): # where is image results for all values of heights for pos
                 maxD = 300
                 delD = 50
             zones = {}
+            zones_ = {}
             for  zone in ZoneForDB.objects.filter(name__contains = help_str ):
                 if zone.position ==caption:
                     reData = json.loads(zone.intervals) 
                     zone1 = createZoneFromElementOfDBWithLimits(reData, zone.latOfCenter, zone.longOfCenter, zone.stepOfAzimuth, \
-                                                            500)
-                    
+                                                            500)     
+                    zone2 = createZoneFromElementOfDBWithLimits(reData, zone.latOfCenter, zone.longOfCenter, zone.stepOfAzimuth, \
+                                                            500)      
                     zones[int(zone.name[zone.name.index('hAircraft=')+10:zone.name.index('.0A')])] = zone1
-                    #пытаюсь настроить кольца
-                    # if i_z>0:
-                    #     if int(zone.name[zone.name.index('hAircraft=')+10:zone.name.index('.0A')])>i_z:
-                    #         zone_outter = zone1
-                    #     else:
-                    #         zone_outter = zone_inner
-                    #         zone_inner = zone1
-                    # if i_z == 0:
-                    #     zone_inner = zone1
-                    #     try:
-                    #         strH = zone.name[zone.name.index('hAircraft=')+10:zone.name.index('.0A')]
-                    #         i_z = int(strH)
-                    #     except ValueError:
-                    #         i_z = 0
-                    # конец блока настройки поиска колец
+                    #вторую надо чтобы не было при первой отрисовке влияния на вторую, поскольку объекты меняются
+                    zones_[int(zone.name[zone.name.index('hAircraft=')+10:zone.name.index('.0A')])] = zone2
+
             map.location = [zone.latOfCenter,zone.longOfCenter]
             if len(zones)>0:
-                count = 0
-                for item in zones.values():
-                    try:
-                        # folium.Polygon(item, color = myFunc.intToColor(count),  opacity = 1, weight = 1.0,  fill =True, fill_opacity = 0.2,\
-                        #             fill_color = myFunc.intToColor(count)).add_to(map)
-                        count +=1    
-                    except ValueError: # добавил обработку исключения, поскольку при нулевых значениях выпадала ошибка
-                        pass
+                # первая отрисовка
                 zones_S = sorted(zones.items())
                 for i in range(0,len(zones_S)):
                     if i == 0:
-                        col = 'red'
-                        folium.Polygon(zones_S[i][1], color = col,  opacity = 1, weight = 1.0,  fill =True, fill_opacity = 0.4,\
+                        col = myFunc.intToColor(i)
+                        folium.Polygon(zones_S[i][1], color = col,  opacity = 0.2, weight = 1.0,  fill =True, fill_opacity = 0.4,\
                                 fill_color = col).add_to(map) 
                     else:
                         zone_h = zones_S[i][1]
-                        zone_h[1].append(zones_S[i-1][1][0]) # эта строка изменяет 
+                        zone_h[1].append(zones_S[i-1][1][0]) # добавляет в исключаемые островки внешний контур меньшей высоты
                         col = myFunc.intToColor(i)
-                        folium.Polygon(zone_h, color = col,  opacity = 1, weight = 1.0,  fill =True, fill_opacity = 0.4,\
+                        folium.Polygon(zone_h, color = col,  opacity = 0.2, weight = 1.0,  fill =True, fill_opacity = 0.4,\
                                 fill_color = col).add_to(map) 
-                        # folium.Polygon(zones_S[i-1][1][1], color = col,  opacity = 1, weight = 1.0,  fill =True, fill_opacity = 0.2,\
-                        #         fill_color = col).add_to(map)
-                
-                # zone_outter[1].append(zone_inner[0])
-                # folium.Polygon(zone_outter, color = col,  opacity = 1, weight = 1.0,  fill =True, fill_opacity = 0.2,\
-                #                fill_color = col).add_to(map)       
-                
+                # вторая отрисовка  - здесь заполняются внутренние островки
+                zones_S_ = sorted(zones_.items())
+                for i in range(0,len(zones_S_)):
+                    if i == 0:
+                        pass
+                    else: 
+                        col = myFunc.intToColor(i)
+                        folium.Polygon(zones_S_[i-1][1][1], color = col,  opacity = 0.2, weight = 1.0,  fill =True, fill_opacity = 0.4,\
+                                fill_color = col).add_to(map)
+                        
                 # image position of center
                 folium.CircleMarker(location = [zone.latOfCenter,zone.longOfCenter], color = 'navy', opacity = 0.6, radius = 2).\
                     add_to(map)
@@ -971,27 +957,29 @@ def heights(request): # where is image results for all values of heights for pos
                     lat_pre = 0
                     lon_pre = 0
                     for item in pods.keys():
-                        if bool(pods[item][2]):
-                            icon1 = folium.CustomIcon('polls/pnd.ico',icon_size=(10, 10))
-                        else:
-                            icon1 = folium.CustomIcon('polls/pod.ico',icon_size=(10, 10))
-                        folium.Marker(location=[pods[item][0], pods[item][1]], icon= icon1,).add_to(map)
-                        folium.Marker(location=[pods[item][0]-0.0025*5,pods[item][1]+0.0083*5],\
-                                      icon=folium.DivIcon(html=\
-                                                          f'''<!DOCTYPE html><html><div style="font-size: 8pt"><p>{item}</p></div></html>''',
-                                            class_name="mapText"),
-                        ).add_to(map)
-                        if lat_pre!=0 and lon_pre!=0:
-                            folium.PolyLine([(lat_pre,lon_pre),(pods[item][0], pods[item][1])],\
-                                            color='gray',weight=1).add_to(map)
-                            folium.Marker(location=[(pods[item][0]+lat_pre)/2,(pods[item][1]+lon_pre)/2],
-                                        icon=folium.DivIcon(html=f'''<!DOCTYPE html><html><div style="font-size: 8pt"><p>{track.name}</p></div></html>''',
-                                        class_name="mapText")).add_to(map)
-                            lat_pre = pods[item][0]
-                            lon_pre = pods[item][1]
-                        else:
-                            lat_pre = pods[item][0]
-                            lon_pre = pods[item][1] 
+                        #рисуем только вокруг зоны отображения трассы, чтобы карта не глючила
+                        if GeoFunctions.DistanceInLatLonHeight(zone.latOfCenter,zone.longOfCenter,0,pods[item][0], pods[item][1],0)<700000:
+                            if bool(pods[item][2]):
+                                icon1 = folium.CustomIcon('polls/pnd.ico',icon_size=(10, 10))
+                            else:
+                                icon1 = folium.CustomIcon('polls/pod.ico',icon_size=(10, 10))
+                            folium.Marker(location=[pods[item][0], pods[item][1]], icon= icon1,).add_to(map)
+                            folium.Marker(location=[pods[item][0]-0.0025*5,pods[item][1]+0.0083*5],\
+                                        icon=folium.DivIcon(html=\
+                                                            f'''<!DOCTYPE html><html><div style="font-size: 8pt"><p>{item}</p></div></html>''',
+                                                class_name="mapText"),
+                            ).add_to(map)
+                            if lat_pre!=0 and lon_pre!=0:
+                                folium.PolyLine([(lat_pre,lon_pre),(pods[item][0], pods[item][1])],\
+                                                color='gray',weight=1).add_to(map)
+                                folium.Marker(location=[(pods[item][0]+lat_pre)/2,(pods[item][1]+lon_pre)/2],
+                                            icon=folium.DivIcon(html=f'''<!DOCTYPE html><html><div style="font-size: 8pt"><p>{track.name}</p></div></html>''',
+                                            class_name="mapText")).add_to(map)
+                                lat_pre = pods[item][0]
+                                lon_pre = pods[item][1]
+                            else:
+                                lat_pre = pods[item][0]
+                                lon_pre = pods[item][1] 
     else:
         form = forHeigths()
 
