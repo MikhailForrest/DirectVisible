@@ -826,6 +826,8 @@ def zones(request):
                     folium.Marker(location=[latCenter,lonCenter],
                                        icon=folium.DivIcon(html=f'''<!DOCTYPE html><html><div style="font-size: 8pt"><p>{nameCenter}</p></div></html>''',
                                                 class_name="mapText")).add_to(map1)
+                    
+                    #for 22:34
             
     elif (request.method == "POST") and ('ViewDataHeight' in request.POST):
         form = forZones(request.POST)
