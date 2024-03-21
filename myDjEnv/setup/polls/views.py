@@ -541,7 +541,7 @@ def zones(request):
             #далее закомментить
             map1 = folium.Map(location = [55,45],zoom_start = 3, control_scale=True, prefer_canvas = True, zoom_control = False,\
                                 tiles = 'OpenStreetMap')
-            for  zone in ZoneForDB.objects.filter(name__contains = 'hAircraft=8100.0AMSL'):
+            for  zone in ZoneForDB.objects.filter(name__contains = 'hAircraft=810.0AMSL'): #'hAircraft=8100.0AMSL'):
                 reData = json.loads(zone.intervals)
             
                 zone1 = createZoneFromElementOfDBWithLimits(reData, zone.latOfCenter, zone.longOfCenter, zone.stepOfAzimuth, \
