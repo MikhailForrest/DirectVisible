@@ -107,8 +107,8 @@ def map_button(request):
     if  (request.method == "POST") and ('Direct Visibility' in request.POST):  
         form = DirVis(request.POST)
         elev_of_azimuth = forReadElevationFile.readElevationFile('polls\elevations\dvorSVO.xlsx')
-        temp = scipy.interpolate.CubicSpline(elev_of_azimuth['azimuts'], elev_of_azimuth['elevations'])#,bc_type='periodic')
-        elev = temp(182)
+        i1D_elev_of_azimuth = scipy.interpolate.interp1d(elev_of_azimuth['azimuts'], elev_of_azimuth['elevations'])
+        #bc_type='periodic' --- The first and last value of y must be identical: y[0] == y[-1]
         if form.is_valid():  
             position = form.cleaned_data['position']
             lat = form.cleaned_data['lat']  # чтение данных с формы g
@@ -155,7 +155,9 @@ def map_button(request):
                             (topocentric.getElevationInDeg(lat_f, lon+dlon_f, heightOfAircraft)<\
                              form.cleaned_data['limitUpperAngle']) and \
                             (topocentric.getElevationInDeg(lat_f, lon+dlon_f, heightOfAircraft)>\
-                             form.cleaned_data['limitLowerAngle']):
+                             form.cleaned_data['limitLowerAngle']) and \
+                                (topocentric.getElevationInDeg(lat_f, lon+dlon_f, heightOfAircraft)>\
+                                 i1D_elev_of_azimuth(azimuth)):
                             if not isOpenedInterval:
                                 helpVar = dist_in_km
                                 isOpenedInterval = True
@@ -174,7 +176,9 @@ def map_button(request):
                                                             form.cleaned_data['limitUpperAngle']) and \
                             (topocentric.getElevationInDeg(lat_f, lon+dlon_f, heightOfAircraft+\
                                                            PointToPointVisible.heightFromLatLon(lat_f,lon+dlon_f))>\
-                                                            form.cleaned_data['limitLowerAngle']):
+                                                            form.cleaned_data['limitLowerAngle'])and \
+                                (topocentric.getElevationInDeg(lat_f, lon+dlon_f, heightOfAircraft)>\
+                                 i1D_elev_of_azimuth(azimuth)):
                             if not isOpenedInterval:
                                 helpVar = dist_in_km
                                 isOpenedInterval = True
