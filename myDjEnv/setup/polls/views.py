@@ -39,6 +39,8 @@ import socket, ssl, sys # firehose - поставщика ADS-B
 from .forFireHose import InflateStream
 from .forFireHose import parse_json
 import os
+import scipy.interpolate
+from .elevations import forReadElevationFile
 
 class IndexView(generic.ListView):
     template_name = "polls/index.html"
@@ -104,6 +106,9 @@ def map_button(request):
         
     if  (request.method == "POST") and ('Direct Visibility' in request.POST):  
         form = DirVis(request.POST)
+        elev_of_azimuth = forReadElevationFile.readElevationFile('polls\elevations\dvorSVO.xlsx')
+        temp = scipy.interpolate.CubicSpline(elev_of_azimuth['azimuts'], elev_of_azimuth['elevations'],bc_type='periodic')
+        
         if form.is_valid():  
             position = form.cleaned_data['position']
             lat = form.cleaned_data['lat']  # чтение данных с формы g
