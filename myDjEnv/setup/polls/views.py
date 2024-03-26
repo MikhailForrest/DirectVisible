@@ -107,7 +107,10 @@ def map_button(request):
     if  (request.method == "POST") and ('Direct Visibility' in request.POST):  
         form = DirVis(request.POST)
         elev_of_azimuth = forReadElevationFile.readElevationFile('polls\elevations\dvorSVO.xlsx')
-        i1D_elev_of_azimuth = scipy.interpolate.interp1d(elev_of_azimuth['azimuts'], elev_of_azimuth['elevations'])
+        #i1D_elev_of_azimuth = scipy.interpolate.interp1d(elev_of_azimuth['azimuts'], elev_of_azimuth['elevations'])
+        i1D_elev_of_azimuth = scipy.interpolate.make_smoothing_spline(elev_of_azimuth['azimuts'], elev_of_azimuth['elevations'])
+
+        
         #bc_type='periodic' --- The first and last value of y must be identical: y[0] == y[-1]
         if form.is_valid():  
             position = form.cleaned_data['position']
