@@ -158,9 +158,9 @@ def map_button(request):
                             (topocentric.getElevationInDeg(lat_f, lon+dlon_f, heightOfAircraft)<\
                              form.cleaned_data['limitUpperAngle']) and \
                             (topocentric.getElevationInDeg(lat_f, lon+dlon_f, heightOfAircraft)>\
-                             form.cleaned_data['limitLowerAngle']) and \
-                                (topocentric.getElevationInDeg(lat_f, lon+dlon_f, heightOfAircraft)>\
-                                 i1D_elev_of_azimuth(azimuth)):
+                             form.cleaned_data['limitLowerAngle']):# and \
+                                #(topocentric.getElevationInDeg(lat_f, lon+dlon_f, heightOfAircraft)>\
+                                # i1D_elev_of_azimuth(azimuth)):
                             if not isOpenedInterval:
                                 helpVar = dist_in_km
                                 isOpenedInterval = True
@@ -179,9 +179,9 @@ def map_button(request):
                                                             form.cleaned_data['limitUpperAngle']) and \
                             (topocentric.getElevationInDeg(lat_f, lon+dlon_f, heightOfAircraft+\
                                                            PointToPointVisible.heightFromLatLon(lat_f,lon+dlon_f))>\
-                                                            form.cleaned_data['limitLowerAngle'])and \
-                                (topocentric.getElevationInDeg(lat_f, lon+dlon_f, heightOfAircraft)>\
-                                 i1D_elev_of_azimuth(azimuth)):
+                                                            form.cleaned_data['limitLowerAngle']):#and \
+                                #(topocentric.getElevationInDeg(lat_f, lon+dlon_f, heightOfAircraft)>\
+                                # i1D_elev_of_azimuth(azimuth)):
                             if not isOpenedInterval:
                                 helpVar = dist_in_km
                                 isOpenedInterval = True
