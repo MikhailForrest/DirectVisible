@@ -33,7 +33,7 @@ class DirVis(forms.Form):
     accuracyOfAzimuth = forms.ChoiceField(label='Step for azimuth:', choices = STEPS_OF_AZIMUTH, initial="5")
     divisionOfDistance = forms.ChoiceField(label='Division Of Distance:', choices = COUNTS_OF_SPLIT, initial="1")
     limitUpperAngle = forms.FloatField(label='limit of Upper Angle:', initial=90, min_value=0, max_value=90)
-    limitLowerAngle = forms.FloatField(label='limit of Lower Angle:', initial=0, min_value=-90, max_value=90)
+    limitLowerAngle = forms.FloatField(label='limit of Lower Angle:', initial=-1, min_value=-90, max_value=90)
     AboveGroundLevel = forms.BooleanField(label='Above Ground Level:', widget=forms.CheckboxInput(),required=False)
     isDrawingCircles = forms.BooleanField(label='Draw scale circles:', widget=forms.CheckboxInput(),required=False, initial=True)
     isDrawingRelief = forms.BooleanField(label='Draw relief:', widget=forms.CheckboxInput(),required=False)
