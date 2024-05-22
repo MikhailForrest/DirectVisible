@@ -730,6 +730,7 @@ def zones(request):
                                                             form.cleaned_data['limitDist'])
 
                 try:
+                    # чтобы другим цветом отображать с ключевым словом 'SITA'
                     if zone.position.find('SITA') > 0:
                         folium.Polygon(zone1, color = 'orange',  opacity = 0.0, weight = 0,  fill =True, fill_opacity = 0.4,\
                                     fill_color = 'orange').add_to(map1) 
