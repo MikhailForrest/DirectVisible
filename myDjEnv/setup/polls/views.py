@@ -730,8 +730,12 @@ def zones(request):
                                                             form.cleaned_data['limitDist'])
 
                 try:
-                    folium.Polygon(zone1, color = 'green',  opacity = 0.0, weight = 0,  fill =True, fill_opacity = 0.6,\
-                                fill_color = 'green').add_to(map1)    
+                    if zone.position.find('SITA') > 0:
+                        folium.Polygon(zone1, color = 'orange',  opacity = 0.0, weight = 0,  fill =True, fill_opacity = 0.4,\
+                                    fill_color = 'orange').add_to(map1) 
+                    else:
+                        folium.Polygon(zone1, color = 'green',  opacity = 0.0, weight = 0,  fill =True, fill_opacity = 0.6,\
+                                    fill_color = 'green').add_to(map1)    
                 except ValueError: # добавил обработку исключения, поскольку при нулевых значениях выпадала ошибка
                     pass
 
@@ -750,13 +754,14 @@ def zones(request):
                         folium.Circle(location=[zone.latOfCenter,zone.longOfCenter],
                             radius=radiusU,
                             color='black',
+                            opacity = 0.4,
                             weight=1,
                             fill=False
                             ).add_to(map1)
                         dist = math.trunc(radiusU/1000)
                         for az in (0,90,180,270):
                             (lat_,dlon_,alfa2_) = GeoFunctions.Direct_Geodezian_Task(zone.latOfCenter, az, 1000*dist)
-                            folium.Marker(location=[lat_,zone.longOfCenter+dlon_],
+                            folium.Marker(location=[lat_,zone.longOfCenter+dlon_],opacity = 0.4,
                                         icon=folium.DivIcon(html=f'''<!DOCTYPE html><html><div style="font-size: 8pt"><p>{str(dist)+'km'}</p></div></html>''',
                                         class_name="mapText")).add_to(map1)
 
