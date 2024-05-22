@@ -8,8 +8,10 @@ def rectangle_folium(lat, lon, step):
     listOfCoord.append([lat-step, lon-step])
     return listOfCoord
 
-def bilinean_interpolation(x1,y1,x2,y2,Q11,Q12,Q21,Q22,x,y): # расчет значения внутри прямоугольной сетки с известными значениями в узлах
-                                                             # по билинейной интерполяции
+def bilinean_interpolation(x1,y1,x2,y2,Q11,Q12,Q21,Q22,x,y): 
+    ''' 
+    Расчет значения внутри прямоугольной сетки с известными значениями в узлах по билинейной интерполяции
+    '''
     if ((x2-x1)!=0) and  ((y2-y1)!=0):
         k1 = Q11/((x2-x1)*(y2-y1))
         k2 = Q21/((x2-x1)*(y2-y1))
@@ -24,7 +26,10 @@ def bilinean_interpolation(x1,y1,x2,y2,Q11,Q12,Q21,Q22,x,y): # расчет зн
         bI = (Q11+Q12)/2+((Q21+Q22)/2-(Q11+Q12)/2)(x-x1)/(x2-x1)
     return bI
      
-def height_to_color(height):  # функция перевода высоты в метрах в цвет для красивой физической карты
+def height_to_color(height):  
+    '''
+    функция перевода высоты в метрах в цвет для красивой физической карты
+    '''
     values = {0: '#009500', 10: '#009B00', 20: '#00A000', 30: '#00A300', 40: '#00A800', 50: '#00B000', 60: '#00B800',\
             70: '#00C000', 80: '#00C800', 90: '#00D000', 100: '#00D800', 125: '#00E000', 150: '#00E800', 175: '#00F500', \
             200: '#30FE00', 225: '#50FE00', 250: '#70FE00', 275: '#90FF00', 300: '#A0FF00', 325: '#B0FF00', 350: '#C0FF00', \
@@ -73,9 +78,10 @@ def height_to_color(height):  # функция перевода высоты в 
         return values[11000]
     
 
-
-#функция определения пересечения двух интервалов значений - интервал от меньшего к большему
 def intersect_direct_intervals(start1: float, end1: float, start2: float, end2: float):
+    '''
+    функция определения пересечения двух интервалов значений - интервал от меньшего к большему
+    '''
     innerBool = True
     if (end1<start2):
         innerBool = False
@@ -145,11 +151,15 @@ def intersect_two_segments (lat1OfFirst,lon1OfFirst,lat2OfFirst,lon2OfFirst,lat1
                     else: return False
             else: return False
 
-# Функция определения пересечения прямоугольников параллельных осям
+
 def intersect_rectangles (latmin_f,latmax_f,lonmin_f,lonmax_f,\
                           latmin_s,latmax_s,lonmin_s,lonmax_s) -> bool:
-    # если есть пересечения ребер или если после проверки пересечения любая точка одного лежит внутри другого,
-    # то пересекаются
+    '''
+    Функция определения пересечения прямоугольников параллельных осям
+    если есть пересечения ребер или если после проверки пересечения любая точка одного лежит внутри другого,
+    то пересекаются
+    '''
+    
     if intersect_two_segments(latmin_f,lonmin_f,latmax_f,lonmin_f,latmin_s,lonmin_s,latmax_s,lonmin_s):
         return True
     elif intersect_two_segments(latmin_f,lonmin_f,latmax_f,lonmin_f,latmax_s,lonmin_s,latmax_s,lonmax_s):
@@ -189,8 +199,10 @@ def intersect_rectangles (latmin_f,latmax_f,lonmin_f,lonmax_f,\
     else:
         return False
     
-# Функция для перевода шага итерации в отличный от предыдущего цвет
 def intToColor (i: int):
+    '''
+    Функция для перевода шага итерации в отличный от предыдущего цвет
+    '''
     innerDict = {0: 'red', 1: 'coral', 2: 'yellow', 3: 'springgreen', 4: 'green', 5: 'lightseagreen',\
                  6: 'dodgerblue', 7: 'mediumblue', 8: 'indigo', 9: 'magenta', 10: 'violet', 11: 'crimson', \
                  12: 'olive', 13: 'navy', 14: 'fucsia', 15: 'chocolate'}
