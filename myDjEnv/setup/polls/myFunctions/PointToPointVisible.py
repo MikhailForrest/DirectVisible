@@ -4,8 +4,10 @@ from . import GeoFunctions
 from . import myFunc
 from . import workWithData
 
-# функция вытаскивания значения высоты из файлов - медленная - использовать только для одиночных редких обращений
 def heightFromLatLon (lat, lon):
+    '''
+    Функция вытаскивания значения высоты из файлов - медленная - использовать только для одиночных редких обращений
+    '''
     # определяем из какого файла берем значение
     s = GeoFunctions.hgtFilenameOfLatLong(lat, lon)       
     data = open(s,'rb') #'polls\\mapsHgt\\N54E042.hgt'
@@ -45,9 +47,14 @@ def heightFromLatLon (lat, lon):
     return s
 
 
-# функция определения прямой геометрической видимости
-def DirVisUnit(lat0, lon0, h0, lat, lon, h, limitOfDistance, fileOfHGT, useUsersObj): # широты и долготы в градусах
-                           # limitOfDistance в км - ограничение по расстоянию сверху, если дистанция выше, то прямой видимости нет     
+
+def DirVisUnit(lat0, lon0, h0, lat, lon, h, limitOfDistance, fileOfHGT, useUsersObj): 
+    '''
+    Функция определения прямой геометрической видимости
+    широты и долготы в градусах
+    limitOfDistance в км - ограничение по расстоянию сверху, если дистанция выше, то прямой видимости нет   
+    '''
+      
     innerBool = True #если встретит препятствие. то станет ложью: для результата функции
     deltaB = abs(lat0-lat)
     deltaL = abs(lon0-lon)
@@ -199,9 +206,13 @@ def DirVisUnit(lat0, lon0, h0, lat, lon, h, limitOfDistance, fileOfHGT, useUsers
     return innerBool
 
 
-# функция определения прямой геометрической видимости без обращения к файлу высот
-def DirVisUnit_0(lat0, lon0, h0, lat, lon, h, limitOfDistance, useUsersObj): # широты и долготы в градусах
-                           # limitOfDistance в км - ограничение по расстоянию сверху, если дистанция выше, то прямой видимости нет     
+
+def DirVisUnit_0(lat0, lon0, h0, lat, lon, h, limitOfDistance, useUsersObj): 
+    '''
+    функция определения прямой геометрической видимости без обращения к файлу высот
+    широты и долготы в градусах
+    limitOfDistance в км - ограничение по расстоянию сверху, если дистанция выше, то прямой видимости нет 
+    '''
     innerBool = True #если встретит препятствие. то станет ложью: для результата функции
     deltaB = abs(lat0-lat)
     deltaL = abs(lon0-lon)
